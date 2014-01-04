@@ -4,10 +4,10 @@ if (!window.engine) window.engine = {};
     
     engine.ResourceManager = function() {
         this._imagesToLoad = [];
-        this._loadedImages = {};
+        this.loadedImages = {};
         
         this._jsonToLoad = [];
-        this._loadedJson = {};
+        this.loadedJson = {};
         
         this.addJson = function(jsonUrl) {
             this._jsonToLoad.push(jsonUrl);
@@ -23,18 +23,22 @@ if (!window.engine) window.engine = {};
                 var imgPromises = [],
                     jsonPromises = [];
                 
-                ths._imagesToLoad.every(function(url) {
-                    var promise = getImage(url);
-                    promise.then(function(img) {
-                        ths._loadedImages[url] = img;
-                    });
-                    imgPromises.push(promise);
+                ths._imagesToLoad.forEach(function(url) {
+                    (function(url){
+                        var promise = getImage(url);
+                        promise.then(function(img) {
+                            ths.loadedImages[url] = img;
+                            ths._resourceLoaded();
+                        });
+                        imgPromises.push(promise);
+                    })(url);
                 });
                 
-                ths._jsonToLoad.every(function(url) {
+                ths._jsonToLoad.forEach(function(url) {
                     var promise = getJson(url);
                     promise.then(function(json) {
-                        ths._loadedJson[url] = json;
+                        ths.loadedJson[url] = json;
+                        ths._resourceLoaded();
                     });
                     jsonPromises.push(promise);
                 });
@@ -46,6 +50,15 @@ if (!window.engine) window.engine = {};
                 });
             });
         };
+        
+        this._resourceLoaded = function() {
+            var loaded, total;
+            
+            loaded = Object.size(this.loadedJson) + Object.size(this.loadedImages);
+            total = this._jsonToLoad.length + this._imagesToLoad.length;
+            
+            window.PubSub.publish("ResourceManager.resourceLoaded", {loaded: loaded, total: total});
+        }
         
         /*
          * Request Processing

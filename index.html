@@ -12,16 +12,27 @@
         <canvas id="stage" width="800" height="600"></canvas>
         
         <div id="hud">
-            <div id="hud-loading">
+            <div id="hud-loading" class="hud-screen">
                 <p id="hud-loading-perc">loading...</p>
+            </div>
+            <div id="hud-main" class="hud-screen">
+                
             </div>
         </div>
         
         <!-- JavaScript -->
         
         <script src="./js/lib/promise-0.1.1.min.js"></script>
+        <script src="./js/lib/pubsub.js"></script>
         
+        <script src="./js/engine/helpers.js"></script>
+        <script src="./js/engine/keyboard.js"></script>
         <script src="./js/engine/resourceManager.js"></script>
+        
+        <script src="./js/game/hud.js"></script>
+        <script src="./js/game/player.js"></script>
+        <script src="./js/game/waves.js"></script>
+        
         <script src="./js/main.js"></script>
     </body>
 </html>
