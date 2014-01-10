@@ -6,9 +6,6 @@ window.GameClass = function() {
     this.stageHeight = 0;
     this.resources = {};
     
-    this.curKeyboardState = null;
-    this.prevKeyboardState = null;
-    
     this.waves = null;
     this.player = null;
     
@@ -19,8 +16,6 @@ window.GameClass = function() {
         this.stageHeight = cvs.height;
         
         window.engine.Keyboard.Init();
-        this.curKeyboardState = window.engine.Keyboard.GetState();
-        this.prevKeyboardState = this.curKeyboardState;
         
         this.loadResources();
     };
@@ -56,12 +51,11 @@ window.GameClass = function() {
     this.update = function() {
         this.ctx.clearRect(0, 0, this.stageWidth, this.stageHeight);
         
-        this.curKeyboardState = window.engine.Keyboard.GetState();
+        window.engine.Keyboard.Update();
         
         this.waves.update();
         this.player.update();
-        
-        this.prevKeyboardState = this.curKeyboardState;
+        window.Bullet.Update();
         
         window.requestAnimationFrame(this.update.bind(this));
     };

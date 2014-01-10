@@ -2,47 +2,42 @@ if (!window.engine) window.engine = {},
 
 (function(window, engine) {
     engine.Keyboard = function() {};
-    engine.Keyboard._keys = [];
+    engine.Keyboard._prevKeys = {};
+    engine.Keyboard._curKeys = {};
     engine.Keyboard.Init = function() {
         window.addEventListener('keydown', function(e) {
-            if (engine.Keyboard._keys.indexOf(e.keyCode) === -1) {
-                engine.Keyboard._keys.push(e.keyCode);
-            }
+            engine.Keyboard._curKeys[e.keyCode] = true;
         });
         
         window.addEventListener('keyup', function(e) {
-            var keyIndex = engine.Keyboard._keys.indexOf(e.keyCode);
-            if (keyIndex !== -1) {
-                engine.Keyboard._keys.splice(keyIndex, 1);
-            }
+            engine.Keyboard._curKeys[e.keyCode] = false;
         });
     };
     
-    engine.Keyboard.GetState = function() {
-        return new engine.KeyboardState(engine.Keyboard._keys);
+    engine.Keyboard.Update = function() {
+        for (var key in engine.Keyboard._curKeys) {
+            engine.Keyboard._prevKeys[key] = engine.Keyboard._curKeys[key];
+        }
     };
     
-    engine.KeyboardState = function(keys) {
-        this._keys = [];
-        for (var i = 0; i < keys.length; i++) {
-            this._keys.push(keys[i]);
-        }
-        
-        this.IsKeyUp = function(key) {
-            return (this._keys.indexOf(key) === -1);
-        };
-        
-        this.IsKeyDown = function(key) {
-            return (this._keys.indexOf(key) !== -1);
-        };
-        
-        this.IsLeft = function() {
-            return ((this.IsKeyDown(engine.Keys.A)) || (this.IsKeyDown(engine.Keys.Left)));
-        };
-        
-        this.IsRight = function() {
-            return ((this.IsKeyDown(engine.Keys.D)) || (this.IsKeyDown(engine.Keys.Right)));
-        };
+    engine.Keyboard.IsKeyUp = function(key) {
+        return !engine.Keyboard._curKeys[key];
+    };
+    
+    engine.Keyboard.IsKeyDown = function(key) {
+        return engine.Keyboard._curKeys[key];
+    };
+    
+    engine.Keyboard.IsKeyJustPressed = function(key) {
+        return engine.Keyboard._curKeys[key] && !engine.Keyboard._prevKeys[key];
+    };
+    
+    engine.Keyboard.IsLeft = function() {
+        return ((engine.Keyboard.IsKeyDown(engine.Keys.A)) || (engine.Keyboard.IsKeyDown(engine.Keys.Left)));
+    };
+    
+    engine.Keyboard.IsRight = function() {
+        return ((engine.Keyboard.IsKeyDown(engine.Keys.D)) || (engine.Keyboard.IsKeyDown(engine.Keys.Right)));
     };
     
     engine.Keys = {
