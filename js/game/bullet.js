@@ -14,14 +14,15 @@
         this.update = function() {
             this.position.y -= this.speed;
             
+            if (this.position.y + (this.size.y * 0.5) < 0) {
+                this.active = false;
+                return;
+            }
+            
             w.Game.ctx.fillStyle = "rgb(0,0,0)";  
             w.Game.ctx.fillRect(this.position.x - (this.size.x * 0.5),
                 this.position.y - (this.size.y * 0.5),
                 this.size.x, this.size.y);
-            
-            if (this.position.y + (this.size.y * 0.5) < 0) {
-                this.active = false;
-            }
         };
     };
     
