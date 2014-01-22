@@ -37,7 +37,7 @@
             }
             
             if (engine.Keyboard.IsKeyDown(engine.Keys.Space)) {
-                var now = new Date().getTime()
+                var now = new Date().getTime();
                 if((now - this._lastFireTime) > this._fireRate) {
                     w.Bullet.FireNew(this.position.x + (this._data.frame.w * 0.5), this.position.y);
                     this._lastFireTime = now;

@@ -32,6 +32,7 @@
                 if (self.rect.intersects(bullet.rect)) {
                     self.active = false;
                     bullet.active = false;
+                    w.Explosion.New(self.rect.x, self.rect.y);
                 }
             });
             

@@ -28,6 +28,7 @@ window.GameClass = function() {
         
         loader.addImage("./resources/images/planes.png");
         loader.addImage("./resources/images/waves.gif");
+        loader.addImage("./resources/images/explosion.png");
         
         loader.load().then(function(results) {
             ths.resources.images = loader.loadedImages;
@@ -61,6 +62,7 @@ window.GameClass = function() {
         this.waves.update();
         window.Bullet.Update();
         window.Enemy.Update();
+        window.Explosion.Update();
         this.player.update();
         
         window.requestAnimationFrame(this.update.bind(this));
