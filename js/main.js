@@ -36,6 +36,11 @@ window.GameClass = function() {
             ths.waves = new window.Waves(ths.resources.images["./resources/images/waves.gif"]);
             ths.waves.init();
             
+            window.Enemy.Init(
+                ths.resources.images["./resources/images/planes.png"],
+                ths.resources.json["./resources/images/planes.json"]
+            );
+            
             ths.player = new window.Player(
                 ths.resources.images["./resources/images/planes.png"],
                 ths.resources.json["./resources/images/planes.json"].frames.plane_0
@@ -54,8 +59,9 @@ window.GameClass = function() {
         window.engine.Keyboard.Update();
         
         this.waves.update();
-        this.player.update();
         window.Bullet.Update();
+        window.Enemy.Update();
+        this.player.update();
         
         window.requestAnimationFrame(this.update.bind(this));
     };

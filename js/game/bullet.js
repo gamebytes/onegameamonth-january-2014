@@ -2,27 +2,26 @@
     
     var Bullet = function() {
         this.active = false;
-        this.position = new w.Vector2();
-        this.size = new w.Vector2(3, 5);
+        this.rect = new w.Rectangle(0, 0, 3, 5);
         this.speed = 5;
         
         this.init = function(x, y) {
             this.active = true;
-            this.position = new w.Vector2(x, y);
+            this.rect.x = x;
+            this.rect.y = y;
         };
         
         this.update = function() {
-            this.position.y -= this.speed;
-            
-            if (this.position.y + (this.size.y * 0.5) < 0) {
-                this.active = false;
-                return;
-            }
+            this.rect.y -= this.speed;
             
             w.Game.ctx.fillStyle = "rgb(0,0,0)";  
-            w.Game.ctx.fillRect(this.position.x - (this.size.x * 0.5),
-                this.position.y - (this.size.y * 0.5),
-                this.size.x, this.size.y);
+            w.Game.ctx.fillRect(this.rect.x - (this.rect.width * 0.5),
+                this.rect.y - (this.rect.height * 0.5),
+                this.rect.width, this.rect.height);
+            
+            if (this.rect.y + (this.rect.height * 0.5) < 0) {
+                this.active = false;
+            }
         };
     };
     
@@ -44,11 +43,9 @@
         var newBullet;
         if (Bullet._inactiveBullets.length > 0) {
             newBullet = Bullet._bullets[Bullet._inactiveBullets.pop()];
-            console.log("Used Existing bullet");
         } else {
             newBullet = new Bullet();
             Bullet._bullets.push(newBullet);
-            console.log("Created a new bullet");
         }
         
         newBullet.init(x, y);
