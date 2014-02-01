@@ -41,6 +41,7 @@
 
     #hud .hud-screen {
         overflow: hidden;
+        position: relative;
         width: 100%;
         height: 100%;
     }
@@ -51,4 +52,22 @@
         #hud-loading-perc {
             margin-top: 290px;
             text-align: center;
+        }
+        
+    #hud-main {
+    }
+    
+        #hud-main-scoreContainer {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+        }
+        
+        #restart {
+            color: white;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin-left: -21px;
+            margin-top: -10px;
         }

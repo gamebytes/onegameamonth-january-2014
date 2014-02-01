@@ -7,6 +7,8 @@
         this._scale = 0.5;
         this._image = null;
         this._data = {};
+        this._lastFireTime = 0;
+        this._fireRate = 500;
         this.rect = new w.Rectangle();
         
         this.init = function(image, data) {
@@ -28,13 +30,23 @@
         this.update = function() {
             var self = this;
             w.Bullet._bullets.forEach(function(bullet, i) {
-                if (!bullet.active) { return; }
+                if (!bullet.active || bullet.isEnemy) { return; }
                 if (self.rect.intersects(bullet.rect)) {
                     self.active = false;
                     bullet.active = false;
                     w.Explosion.New(self.rect.x, self.rect.y);
+                    w.Hud.setScore(1);
                 }
             });
+            
+            var now = new Date().getTime();
+            if ((now - this._lastFireTime) > this._fireRate) {
+                var rnd = Math.random();
+                if (rnd > 0.99) {
+                    w.Bullet.FireNew(this.rect.x, this.rect.y + (this.rect.height * .5), true, true);
+                    this._lastFireTime = now;
+                }
+            }
             
             this.rect.y += 0.5;
             

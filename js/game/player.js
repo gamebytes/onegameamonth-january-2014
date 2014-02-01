@@ -7,6 +7,10 @@
         this._fireRate = 250;
         this._lastFireTime = 0;
         
+        this.active = true;
+        this.timeDied;
+        this.timeDead = 1000;
+        this.lives = 3;
         this.position = null;
         this.speed = 5;
         
@@ -19,6 +23,36 @@
         };
         
         this.update = function() {
+            var now = new Date().getTime();
+            if (!this.active) {
+                if (this.lives < 0) {
+                    w.Hud.showRestart();
+                    return;
+                }
+                
+                if ((now - this.timeDied) > this.timeDead) {
+                    this.active = true;
+                    this.init();
+                }
+                
+                return;
+            }
+            
+            var self = this;
+            w.Bullet._bullets.forEach(function(bullet, i) {
+                if (!bullet.active || !bullet.isEnemy) { return; }
+                var rect = new w.Rectangle(
+                    self.position.x + (self._data.frame.w * .5),
+                    self.position.y + (self._data.frame.h * .5),
+                    self._data.frame.w, self._data.frame.h)
+                if (rect.intersects(bullet.rect)) {
+                    self.active = false;
+                    self.lives -= 1;
+                    self.timeDied = now;
+                    bullet.active = false;
+                    w.Explosion.New(rect.x, rect.y);
+                }
+            });
             
             if (engine.Keyboard.IsLeft()) {
                 this.position.x -= this.speed;
@@ -37,7 +71,6 @@
             }
             
             if (engine.Keyboard.IsKeyDown(engine.Keys.Space)) {
-                var now = new Date().getTime();
                 if((now - this._lastFireTime) > this._fireRate) {
                     w.Bullet.FireNew(this.position.x + (this._data.frame.w * 0.5), this.position.y);
                     this._lastFireTime = now;

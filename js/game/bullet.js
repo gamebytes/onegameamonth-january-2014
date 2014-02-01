@@ -4,11 +4,16 @@
         this.active = false;
         this.rect = new w.Rectangle(0, 0, 3, 5);
         this.speed = 5;
+        this.isEnemy = false;
         
-        this.init = function(x, y) {
+        this.init = function(x, y, isEnemy) {
             this.active = true;
             this.rect.x = x;
             this.rect.y = y;
+            if (this.speed < 0) {
+                this.speed *= -1;
+            }
+            this.isEnemy = isEnemy;
         };
         
         this.update = function() {
@@ -39,7 +44,7 @@
         });
     };
     
-    Bullet.FireNew = function(x, y) {
+    Bullet.FireNew = function(x, y, dir, isEnemy) {
         var newBullet;
         if (Bullet._inactiveBullets.length > 0) {
             newBullet = Bullet._bullets[Bullet._inactiveBullets.pop()];
@@ -48,7 +53,12 @@
             Bullet._bullets.push(newBullet);
         }
         
-        newBullet.init(x, y);
+        isEnemy = isEnemy === true ? isEnemy : false;
+        
+        newBullet.init(x, y, isEnemy);
+        if (dir) {
+            newBullet.speed *= -1;
+        }
     };
     
     w.Bullet = Bullet;
